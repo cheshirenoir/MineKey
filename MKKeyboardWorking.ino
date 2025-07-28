@@ -20,6 +20,15 @@ const int buttonPin18 = 2;    // the number of the pushbutton pin
 //const int buttonPin17 = 1;    // the number of the pushbutton pin
 //const int buttonPin18 = 0;    // the number of the pushbutton pin
 
+//Mapping into an array of all 20 keys so they can be swapped out easily
+//Order is SW1-SW16, RSwitch1, RSwitch2
+char keycharmap[4][18] = {
+  {'7','8','9','/','4','5','6','*','1','2','3','-','#','0','.','+',KEY_RETURN,KEY_BACKSPACE},
+  {'1','2','3','4','Q','W','E','R','A','S','D','F','Z','X','C','V',KEY_RETURN,KEY_BACKSPACE},
+  {'5','6','7','8','T','Y','U','I','G','H','J','K','B','N','M',',',KEY_RETURN,KEY_BACKSPACE},
+  {KEY_KP_7,KEY_KP_8,KEY_KP_9,KEY_KP_SLASH,KEY_KP_4,KEY_KP_5,KEY_KP_6,KEY_KP_ASTERISK,KEY_KP_1,KEY_KP_2,KEY_KP_3,KEY_KP_MINUS,KEY_KP_0,KEY_KP_0,KEY_KP_DOT,KEY_KP_PLUS,KEY_RETURN,KEY_BACKSPACE}
+};
+
 // Variables will change:
 int buttonState1;				      // the current reading from the input pin
 int lastButtonState1 = LOW;		// the previous reading from the input pin
@@ -61,6 +70,8 @@ int buttonState17;            // the current reading from the input pin
 int lastButtonState17 = LOW;  // the previous reading from the input pin
 int buttonState18;            // the current reading from the input pin
 int lastButtonState18 = LOW;  // the previous reading from the input pin
+
+int metasuper = 0; // Used to record whether the META and SUPER keys are pressed. For META add 1 for SUPER add 2. This becomes the index fo which keyset
 
 // the following variables are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.
@@ -140,10 +151,14 @@ void loop() {
     {
       buttonStateRL = reading;
 
-      // only output the characterif the new button state is HIGH
+      // only output the character if the new button state is HIGH, else release the key.
       if (buttonStateRL == HIGH) 
       {
-        Keyboard.press('L');
+        Keyboard.press(keycharmap[metasuper][16]);
+      }
+      else
+      {
+	      Keyboard.release(keycharmap[metasuper][16]);
       }
     }
   }
@@ -166,7 +181,11 @@ void loop() {
       buttonStateRR = reading;
       if (buttonStateRR == HIGH) 
       {
-        Keyboard.press('R');
+        Keyboard.press(keycharmap[metasuper][17]);
+      }
+      else
+      {
+	      Keyboard.release(keycharmap[metasuper][17]);
       }
     }
   }
@@ -188,7 +207,11 @@ void loop() {
       buttonState17 = reading;
       if (buttonState17 == HIGH) 
       {
-        Keyboard.press('M');
+        metasuper=metasuper+1;
+      }
+      else
+      {
+	      metasuper=metasuper-1;
       }
     }
   }
@@ -210,7 +233,11 @@ void loop() {
       buttonState18 = reading;
       if (buttonState18 == HIGH) 
       {
-        Keyboard.press('S');
+        metasuper=metasuper+2;
+      }
+      else
+      {
+        metasuper=metasuper-2;
       }
     }
   }
@@ -235,7 +262,11 @@ void loop() {
         buttonState1 = reading;
         if (buttonState1 == HIGH) 
         {
-          Keyboard.press('7');
+          Keyboard.press(keycharmap[metasuper][0]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][0]);
         }
       }
     }
@@ -253,7 +284,11 @@ void loop() {
         buttonState5 = reading;
         if (buttonState5 == HIGH) 
         {
-          Keyboard.press('4');
+          Keyboard.press(keycharmap[metasuper][4]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][4]);
         }
       }
     } 
@@ -271,7 +306,11 @@ void loop() {
         buttonState9 = reading;
         if (buttonState9 == HIGH) 
         {
-          Keyboard.press('1');
+          Keyboard.press(keycharmap[metasuper][8]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][8]);
         }
       }
     }
@@ -289,7 +328,11 @@ void loop() {
         buttonState13 = reading;
         if (buttonState13 == HIGH) 
         {
-          Keyboard.press('#');
+          Keyboard.press(keycharmap[metasuper][12]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][12]);
         }
       }
     }
@@ -313,7 +356,11 @@ void loop() {
         buttonState2 = reading;
         if (buttonState2 == HIGH) 
         {
-          Keyboard.press('8');
+          Keyboard.press(keycharmap[metasuper][1]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][1]);
         }
       }
     }
@@ -331,7 +378,11 @@ void loop() {
         buttonState6 = reading;
         if (buttonState6 == HIGH) 
         {
-          Keyboard.press('5');
+          Keyboard.press(keycharmap[metasuper][5]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][5]);
         }
       }
     } 
@@ -349,7 +400,11 @@ void loop() {
         buttonState10 = reading;
         if (buttonState10 == HIGH) 
         {
-          Keyboard.press('2');
+          Keyboard.press(keycharmap[metasuper][9]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][9]);
         }
       }
     }
@@ -367,7 +422,11 @@ void loop() {
         buttonState14 = reading;
         if (buttonState14 == HIGH) 
         {
-          Keyboard.press('0');
+          Keyboard.press(keycharmap[metasuper][13]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][13]);
         }
       }
     }
@@ -390,7 +449,11 @@ void loop() {
         buttonState3 = reading;
         if (buttonState3 == HIGH) 
         {
-          Keyboard.press('9');
+          Keyboard.press(keycharmap[metasuper][2]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][2]);
         }
       }
     }
@@ -408,7 +471,11 @@ void loop() {
         buttonState7 = reading;
         if (buttonState7 == HIGH) 
         {
-          Keyboard.press('6');
+          Keyboard.press(keycharmap[metasuper][6]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][6]);
         }
       }
     } 
@@ -426,7 +493,11 @@ void loop() {
         buttonState11 = reading;
         if (buttonState11 == HIGH) 
         {
-          Keyboard.press('3');
+          Keyboard.press(keycharmap[metasuper][10]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][10]);
         }
       }
     }
@@ -445,7 +516,11 @@ void loop() {
         buttonState15 = reading;
         if (buttonState15 == HIGH) 
         {
-          Keyboard.press('.');
+          Keyboard.press(keycharmap[metasuper][14]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][14]);
         }
       }
     }
@@ -468,7 +543,11 @@ void loop() {
         buttonState4 = reading;
         if (buttonState4 == HIGH) 
         {
-          Keyboard.press('/');
+          Keyboard.press(keycharmap[metasuper][3]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][3]);
         }
       }
     }
@@ -486,7 +565,11 @@ void loop() {
         buttonState8 = reading;
         if (buttonState8 == HIGH) 
         {
-          Keyboard.press('*');
+          Keyboard.press(keycharmap[metasuper][7]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][7]);
         }
       }
     } 
@@ -504,7 +587,11 @@ void loop() {
         buttonState12 = reading;
         if (buttonState12 == HIGH) 
         {
-          Keyboard.press('-');
+          Keyboard.press(keycharmap[metasuper][11]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][11]);
         }
       }
     }
@@ -522,7 +609,11 @@ void loop() {
         buttonState16 = reading;
         if (buttonState16 == HIGH) 
         {
-          Keyboard.press('+');
+          Keyboard.press(keycharmap[metasuper][15]);
+        }
+	else
+        {
+	        Keyboard.release(keycharmap[metasuper][15]);
         }
       }
     }
@@ -530,9 +621,6 @@ void loop() {
 
     digitalWrite(colPin4, LOW);
   }
-
-  // Finished with any keys pressed. Release them.
-  Keyboard.releaseAll();
 
   // Increment the current column number. roll it over if needed
   currentCol++;
