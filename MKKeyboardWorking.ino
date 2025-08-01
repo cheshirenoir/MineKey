@@ -1,3 +1,4 @@
+#include <HID_Keyboard.h>
 #include <Keyboard.h>
 #include <Mouse.h>
 #include <CRotary.h>
@@ -7,6 +8,7 @@
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
+#define MOUSE_SCROLL_AMOUNT 3 //How many lines to scroll the virtual middle mouse on th rotary encoder.
 
 // constants won't change. They're used here to set pin numbers:
 const int rowPin1 = 9;        // For row and column scan, row 1 pin
@@ -142,11 +144,11 @@ static const uint8_t image_data_SNM[512] = {
 
 //Mapping into an array of all 20 keys so they can be swapped out easily
 //Order is SW1-SW16, RSwitch1, RSwitch2
-char keycharmap[4][18] = {
-  {'7','8','9','/','4','5','6','*','1','2','3','-','#','0','.','+',KEY_RETURN,KEY_BACKSPACE},
-  {'1','2','3','4','q','w','e','r','a','s','d','f','z','x','c','v',KEY_RETURN,KEY_BACKSPACE},
-  {'5','6','7','8','t','y','u','i','g','h','j','k','b','n','m',',',KEY_RETURN,KEY_BACKSPACE},
-  {KEY_KP_7,KEY_KP_8,KEY_KP_9,KEY_KP_SLASH,KEY_KP_4,KEY_KP_5,KEY_KP_6,KEY_KP_ASTERISK,KEY_KP_1,KEY_KP_2,KEY_KP_3,KEY_KP_MINUS,KEY_KP_0,KEY_KP_0,KEY_KP_DOT,KEY_KP_PLUS,KEY_RETURN,KEY_BACKSPACE}
+char keycharmap[4][16] = {
+  {'7','8','9','/','4','5','6','*','1','2','3','-','#','0','.','+'},
+  {'1','2','3','4','q','w','e','r','a','s','d','f','z','x','c','v'},
+  {'5','6','7','8','t','y','u','i','g','h','j','k','b','n','m',','},
+  {KEY_KP_7,KEY_KP_8,KEY_KP_9,KEY_KP_SLASH,KEY_KP_4,KEY_KP_5,KEY_KP_6,KEY_KP_ASTERISK,KEY_KP_1,KEY_KP_2,KEY_KP_3,KEY_KP_MINUS,KEY_KP_0,KEY_KP_0,KEY_KP_DOT,KEY_KP_PLUS}
 };
 
 
@@ -310,11 +312,11 @@ void loop() {
       // only output the character if the new button state is HIGH, else release the key.
       if (buttonStateRL == HIGH) 
       {
-        Keyboard.press(keycharmap[metasuper][16]);
+        Keyboard.press(KEY_RETURN);
       }
       else
       {
-	      Keyboard.release(keycharmap[metasuper][16]);
+	      Keyboard.release(KEY_RETURN);
       }
     }
   }
@@ -337,11 +339,8 @@ void loop() {
       buttonStateRR = reading;
       if (buttonStateRR == HIGH) 
       {
-        Keyboard.press(keycharmap[metasuper][17]);
-      }
-      else
-      {
-	      Keyboard.release(keycharmap[metasuper][17]);
+        Keyboard.consumerPress(KEY_MUTE);
+        Keyboard.consumerRelease();
       }
     }
   }
@@ -788,22 +787,24 @@ void loop() {
   // Process the rotary encoders
   if (rotaryRcount == 1)
   {
-    Keyboard.write(KEY_UP_ARROW);
+    Keyboard.consumerPress(KEY_VOLUME_INCREMENT);
     rotaryRcount = 0;
+    Keyboard.consumerRelease();
   }
   if (rotaryRcount == -1)
   {
-    Keyboard.write(KEY_DOWN_ARROW);
+    Keyboard.consumerPress(KEY_VOLUME_DECREMENT);
     rotaryRcount = 0;
+    Keyboard.consumerRelease();
   }
     if (rotaryLcount == 1)
   {
-    Mouse.move(0,0,3);
+    Mouse.move(0,0,MOUSE_SCROLL_AMOUNT);
     rotaryLcount = 0;
   }
     if (rotaryLcount == -1)
   {
-    Mouse.move(0,0,-3);
+    Mouse.move(0,0,MOUSE_SCROLL_AMOUNT*-1);
     rotaryLcount = 0;
   }
 
